@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Notes — Crop Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <div class="page">
+
+    <section class="hero">
+      <p class="plot-line">N · P · K · °C · % · pH · mm</p>
+      <h1>Field Notes</h1>
+      <p class="hero-copy">
+        Five tools for one plot of land: what to sow, what is already grown
+        nearby, what to feed it, how much rain to expect, and what the harvest
+        should come to.
+      </p>
+
+      <nav class="tool-nav" id="tool-nav" aria-label="Tools">
+        <button class="tool-tab is-active" data-tool="recommendation" type="button">
+          <span class="tool-index">01</span>
+          <span class="tool-name">Crop Recommendation</span>
+          <span class="tool-sub">Soil &amp; weather readings</span>
+        </button>
+        <button class="tool-tab" data-tool="prediction" type="button">
+          <span class="tool-index">02</span>
+          <span class="tool-name">Crop Prediction</span>
+          <span class="tool-sub">By district &amp; season</span>
+        </button>
+        <button class="tool-tab" data-tool="fertilizer" type="button">
+          <span class="tool-index">03</span>
+          <span class="tool-name">Fertilizer</span>
+          <span class="tool-sub">What to apply</span>
+        </button>
+        <button class="tool-tab" data-tool="rainfall" type="button">
+          <span class="tool-index">04</span>
+          <span class="tool-name">Rainfall</span>
+          <span class="tool-sub">Subdivision &amp; year</span>
+        </button>
+        <button class="tool-tab" data-tool="yield" type="button">
+          <span class="tool-index">05</span>
+          <span class="tool-name">Yield</span>
+          <span class="tool-sub">Expected production</span>
+        </button>
+      </nav>
+    </section>
+
+    <div class="panels">
+
+      <!-- ================= 01 · CROP RECOMMENDATION ================= -->
+      <section class="panel tool-panel is-active" id="panel-recommendation">
+        <header class="panel-head">
+          <h2>Crop Recommendation</h2>
+          <p>Enter the soil and weather readings from your plot. The model compares
+             them against growing conditions for twenty-two crops and tells you
+             which one fits best.</p>
+        </header>
+
+        <form data-form="recommendation">
+          <div class="field-grid">
+            <div class="field">
+              <label for="N">Nitrogen (N)</label>
+              <input type="number" step="any" id="N" name="N" placeholder="e.g. 90" required>
+              <span class="unit">kg/ha</span>
+            </div>
+            <div class="field">
+              <label for="P">Phosphorus (P)</label>
+              <input type="number" step="any" id="P" name="P" placeholder="e.g. 42" required>
+              <span class="unit">kg/ha</span>
+            </div>
+            <div class="field">
+              <label for="K">Potassium (K)</label>
+              <input type="number" step="any" id="K" name="K" placeholder="e.g. 43" required>
+              <span class="unit">kg/ha</span>
+            </div>
+            <div class="field">
+              <label for="temperature">Temperature</label>
+              <input type="number" step="any" id="temperature" name="temperature" placeholder="e.g. 26.5" required>
+              <span class="unit">°C</span>
+            </div>
+            <div class="field">
+              <label for="humidity">Humidity</label>
+              <input type="number" step="any" id="humidity" name="humidity" placeholder="e.g. 80" required>
+              <span class="unit">%</span>
+            </div>
+            <div class="field">
+              <label for="ph">Soil pH</label>
+              <input type="number" step="any" id="ph" name="ph" placeholder="e.g. 6.5" required>
+              <span class="unit">pH</span>
+            </div>
+            <div class="field field-wide">
+              <label for="rainfall">Rainfall</label>
+              <input type="number" step="any" id="rainfall" name="rainfall" placeholder="e.g. 200" required>
+              <span class="unit">mm</span>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" data-label="Recommend a crop">Recommend a crop</button>
+        </form>
+
+        <div class="result-area" data-result hidden></div>
+        <div class="error-area" data-error hidden></div>
+      </section>
+
+      <!-- ================= 02 · CROP PREDICTION ================= -->
+      <section class="panel tool-panel" id="panel-prediction">
+        <header class="panel-head">
+          <h2>Crop Prediction</h2>
+          <p>Pick a state, district and season. This reads decades of district-level
+             production records and reports which crops are actually grown there at
+             that time of year, and in what proportion.</p>
+        </header>
+
+        <form data-form="prediction">
+          <div class="field-grid">
+            <div class="field field-wide">
+              <label for="cp-state">State</label>
+              <select id="cp-state" name="state" required>
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="cp-district">District</label>
+              <select id="cp-district" name="district" required disabled>
+                <option value="">Select a state first</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="cp-season">Season</label>
+              <select id="cp-season" name="season" required disabled>
+                <option value="">Select a district first</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" data-label="Show crops for this district">Show crops for this district</button>
+        </form>
+
+        <div class="result-area" data-result hidden></div>
+        <div class="error-area" data-error hidden></div>
+      </section>
+
+      <!-- ================= 03 · FERTILIZER ================= -->
+      <section class="panel tool-panel" id="panel-fertilizer">
+        <header class="panel-head">
+          <h2>Fertilizer Recommendation</h2>
+          <p>Describe the conditions in the field and what you are growing. The model
+             matches them against fertilizer trials and names the product to apply.</p>
+        </header>
+
+        <form data-form="fertilizer">
+          <div class="field-grid">
+            <div class="field">
+              <label for="f-temperature">Temperature</label>
+              <input type="number" step="any" id="f-temperature" name="temperature" placeholder="e.g. 26" required>
+              <span class="unit">°C</span>
+            </div>
+            <div class="field">
+              <label for="f-humidity">Humidity</label>
+              <input type="number" step="any" id="f-humidity" name="humidity" placeholder="e.g. 52" required>
+              <span class="unit">%</span>
+            </div>
+            <div class="field">
+              <label for="f-moisture">Soil moisture</label>
+              <input type="number" step="any" id="f-moisture" name="moisture" placeholder="e.g. 38" required>
+              <span class="unit">%</span>
+            </div>
+            <div class="field">
+              <label for="f-soil">Soil type</label>
+              <select id="f-soil" name="soil_type" required>
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-crop">Crop type</label>
+              <select id="f-crop" name="crop_type" required>
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-nitrogen">Nitrogen (N)</label>
+              <input type="number" step="any" id="f-nitrogen" name="nitrogen" placeholder="e.g. 37" required>
+              <span class="unit">kg/ha</span>
+            </div>
+            <div class="field">
+              <label for="f-phosphorous">Phosphorous (P)</label>
+              <input type="number" step="any" id="f-phosphorous" name="phosphorous" placeholder="e.g. 0" required>
+              <span class="unit">kg/ha</span>
+            </div>
+            <div class="field">
+              <label for="f-potassium">Potassium (K)</label>
+              <input type="number" step="any" id="f-potassium" name="potassium" placeholder="e.g. 0" required>
+              <span class="unit">kg/ha</span>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" data-label="Recommend a fertilizer">Recommend a fertilizer</button>
+        </form>
+
+        <div class="result-area" data-result hidden></div>
+        <div class="error-area" data-error hidden></div>
+      </section>
+
+      <!-- ================= 04 · RAINFALL ================= -->
+      <section class="panel tool-panel" id="panel-rainfall">
+        <header class="panel-head">
+          <h2>Rainfall Prediction</h2>
+          <p>Choose a meteorological subdivision and a period. The estimate comes from
+             a trend fitted to more than a century of records, shown next to the
+             long-run average and the range you should actually plan around.</p>
+        </header>
+
+        <form data-form="rainfall">
+          <div class="field-grid">
+            <div class="field field-wide">
+              <label for="r-subdivision">Subdivision</label>
+              <select id="r-subdivision" name="subdivision" required>
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="r-period">Month or season</label>
+              <select id="r-period" name="period" required>
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="r-year">Year</label>
+              <input type="number" step="1" id="r-year" name="year" placeholder="e.g. 2026" required>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" data-label="Estimate rainfall">Estimate rainfall</button>
+        </form>
+
+        <div class="result-area" data-result hidden></div>
+        <div class="error-area" data-error hidden></div>
+      </section>
+
+      <!-- ================= 05 · YIELD ================= -->
+      <section class="panel tool-panel" id="panel-yield">
+        <header class="panel-head">
+          <h2>Yield Prediction</h2>
+          <p>Give the location, the crop and how much land you are planting. The model
+             estimates total production, and the historical figure for the same
+             combination is shown alongside it as a sanity check.</p>
+        </header>
+
+        <form data-form="yield">
+          <div class="field-grid">
+            <div class="field">
+              <label for="y-state">State</label>
+              <select id="y-state" name="state" required>
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="y-district">District</label>
+              <select id="y-district" name="district" required disabled>
+                <option value="">Select a state first</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="y-season">Season</label>
+              <select id="y-season" name="season" required>
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="y-crop">Crop</label>
+              <select id="y-crop" name="crop" required disabled>
+                <option value="">Select a state first</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="y-area">Area</label>
+              <input type="number" step="any" id="y-area" name="area" placeholder="e.g. 197" required>
+              <span class="unit">ha</span>
+            </div>
+            <div class="field">
+              <label for="y-year">Year</label>
+              <input type="number" step="1" id="y-year" name="year" placeholder="e.g. 2026" required>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" data-label="Predict production">Predict production</button>
+        </form>
+
+        <div class="result-area" data-result hidden></div>
+        <div class="error-area" data-error hidden></div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
